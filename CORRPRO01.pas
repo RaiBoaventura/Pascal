@@ -1,0 +1,69 @@
+Program CORRPRO01 ;
+{Faça um programa que leia as respostas de uma prova de múltipla escolha  constantes no arquivo de acesso 
+sequencial tipo texto “prova.txt” (no anexo), cada registro é um string[64] e é composto por:
+01-04    = número do candidato
+05-64    = as sessenta respostas da prova
+MOSTRAR NA TELA O NUM A NOTA, CER, ERR E BRA}
+USES TARDENOITE;
+VAR ARQ:TEXT;
+    REG:STRING[64];
+    GABA:STRING[60];
+    CE,ER,BR,A,B,TG,ERG,C:INTEGER;
+    NOTA:REAL;
+Begin
+ ASSIGN(ARQ,'PROVA.TXT');
+ RESET(ARQ);//ABRE PARA LEITURA
+ REPEAT//VALIDA O GABARITO QUE SERAH LIDO
+  ERG:=0;
+	WRITELN('DIGITE O GABARITO');
+  WRITELN('000000000111111111122222222223333333333444444444455555555556');
+  WRITELN('123456789012345678901234567890123456789012345678901234567890');
+  READLN(GABA);
+	TG:=LENGTH(GABA);
+	IF(TG<60)THEN
+	 BEGIN
+	  WRITELN('ILEGAL MENOS DE 60');
+	  ERG:=1;
+	 END
+	ELSE
+   REPEAT
+    A:=A+1;
+	  IF(GABA[A]<'A') OR (GABA[A]>'E')THEN
+	   BEGIN 
+	    WRITELN('GABARITO DIGITADO ILEGAL');
+	    ERG:=1;
+	   END;
+	 UNTIL(ERG=1) OR (A=60);
+ UNTIL (ERG=0) ;
+//INICIO DA LEITURA
+ WHILE(NOT EOF(ARQ)) DO
+  BEGIN
+   READLN(ARQ,REG);
+//INICIO DA CORRECAO
+//COMO CONTADORES SÃO INDIVIDUAIS (CE,ER,BR) TEM QUE ZERAR
+   CE:=0;
+   ER:=0;
+   BR:=0;
+   FOR A:= 1 TO 60 DO
+    IF(GABA[A]=REG[A+4])THEN //ACERTOU SE VERDADE
+     CE:=CE+1
+    ELSE
+     IF(REG[A+4]=' ')THEN  //DEIXOU DE RESPONDER SE VERDADE    
+      BR:=BR+1
+     ELSE    // SO PODE TER ERRADO
+      ER:=ER+1;
+//CALCULA A NOTA
+    NOTA:=CE*(100/60);
+   IF(C MOD 25) = 0	THEN
+	  BEGIN
+	   WRITELN('ENTER PARA CONTINUAR');
+		 READLN;
+		 CLRSCR;
+		 WRITELN('NUME    NOTA  CER  BRA	ERR');
+		END;
+	 WRITELN(COPY(REG,1,4),NOTA:8:2,CE:5,BR:5,ER:5);
+	 C:=C+1;
+	END;	 
+       
+ TERMINE
+End.               
